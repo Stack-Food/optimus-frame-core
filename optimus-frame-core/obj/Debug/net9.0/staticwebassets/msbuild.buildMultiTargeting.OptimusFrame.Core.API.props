@@ -1,3 +1,0 @@
-﻿<Project>
-  <Import Project="..\build\OptimusFrame.Core.API.props" />
-</Project>

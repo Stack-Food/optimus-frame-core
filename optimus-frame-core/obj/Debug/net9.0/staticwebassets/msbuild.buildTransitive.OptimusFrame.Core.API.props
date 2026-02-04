@@ -1,3 +1,0 @@
-﻿<Project>
-  <Import Project="..\buildMultiTargeting\OptimusFrame.Core.API.props" />
-</Project>
