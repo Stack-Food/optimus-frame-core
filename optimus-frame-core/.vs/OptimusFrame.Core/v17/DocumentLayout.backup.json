@@ -1,0 +1,127 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\Leonardo\\Documents\\Projeto\\OptimusFrame.Core.API\\optimus-frame-core\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{FC845BB1-0C46-4EFF-A7A0-046ED868A9B0}|OptimusFrame.Core.API.csproj|c:\\users\\leonardo\\documents\\projeto\\optimusframe.core.api\\optimus-frame-core\\optimusframe.core.api.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{FC845BB1-0C46-4EFF-A7A0-046ED868A9B0}|OptimusFrame.Core.API.csproj|solutionrelative:optimusframe.core.api.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{776F126C-B371-465D-B4BA-AD9669DD6208}|..\\OptimusFrame.Core.Gateway\\OptimusFrame.Core.Gateway.csproj|c:\\users\\leonardo\\documents\\projeto\\optimusframe.core.api\\optimusframe.core.gateway\\optimusframe.core.gateway.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{776F126C-B371-465D-B4BA-AD9669DD6208}|..\\OptimusFrame.Core.Gateway\\OptimusFrame.Core.Gateway.csproj|c:\\users\\leonardo\\documents\\projeto\\optimusframe.core.api\\optimusframe.core.gateway\\class1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D485504C-3CDC-4F9C-879B-6909542E913B}|..\\OptimusFrame.Core.Infrastructure\\OptimusFrame.Core.Infrastructure.csproj|c:\\users\\leonardo\\documents\\projeto\\optimusframe.core.api\\optimusframe.core.infrastructure\\optimusframe.core.infrastructure.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{FC845BB1-0C46-4EFF-A7A0-046ED868A9B0}|OptimusFrame.Core.API.csproj|c:\\users\\leonardo\\documents\\projeto\\optimusframe.core.api\\optimus-frame-core\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{FC845BB1-0C46-4EFF-A7A0-046ED868A9B0}|OptimusFrame.Core.API.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{FC845BB1-0C46-4EFF-A7A0-046ED868A9B0}|OptimusFrame.Core.API.csproj|c:\\users\\leonardo\\documents\\projeto\\optimusframe.core.api\\optimus-frame-core\\controllers\\mediacontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{FC845BB1-0C46-4EFF-A7A0-046ED868A9B0}|OptimusFrame.Core.API.csproj|solutionrelative:controllers\\mediacontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 4,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "OptimusFrame.Core.Gateway",
+              "DocumentMoniker": "C:\\Users\\Leonardo\\Documents\\Projeto\\OptimusFrame.Core.API\\OptimusFrame.Core.Gateway\\OptimusFrame.Core.Gateway.csproj",
+              "RelativeDocumentMoniker": "..\\OptimusFrame.Core.Gateway\\OptimusFrame.Core.Gateway.csproj",
+              "ToolTip": "C:\\Users\\Leonardo\\Documents\\Projeto\\OptimusFrame.Core.API\\OptimusFrame.Core.Gateway\\OptimusFrame.Core.Gateway.csproj",
+              "RelativeToolTip": "..\\OptimusFrame.Core.Gateway\\OptimusFrame.Core.Gateway.csproj",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2026-02-04T01:08:59.377Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Class1.cs",
+              "DocumentMoniker": "C:\\Users\\Leonardo\\Documents\\Projeto\\OptimusFrame.Core.API\\OptimusFrame.Core.Gateway\\Class1.cs",
+              "RelativeDocumentMoniker": "..\\OptimusFrame.Core.Gateway\\Class1.cs",
+              "ToolTip": "C:\\Users\\Leonardo\\Documents\\Projeto\\OptimusFrame.Core.API\\OptimusFrame.Core.Gateway\\Class1.cs",
+              "RelativeToolTip": "..\\OptimusFrame.Core.Gateway\\Class1.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-02-04T01:08:55.977Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "OptimusFrame.Core.Infrastructure",
+              "DocumentMoniker": "C:\\Users\\Leonardo\\Documents\\Projeto\\OptimusFrame.Core.API\\OptimusFrame.Core.Infrastructure\\OptimusFrame.Core.Infrastructure.csproj",
+              "RelativeDocumentMoniker": "..\\OptimusFrame.Core.Infrastructure\\OptimusFrame.Core.Infrastructure.csproj",
+              "ToolTip": "C:\\Users\\Leonardo\\Documents\\Projeto\\OptimusFrame.Core.API\\OptimusFrame.Core.Infrastructure\\OptimusFrame.Core.Infrastructure.csproj",
+              "RelativeToolTip": "..\\OptimusFrame.Core.Infrastructure\\OptimusFrame.Core.Infrastructure.csproj",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2026-02-04T01:04:52.349Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "MediaController.cs",
+              "DocumentMoniker": "C:\\Users\\Leonardo\\Documents\\Projeto\\OptimusFrame.Core.API\\optimus-frame-core\\Controllers\\MediaController.cs",
+              "RelativeDocumentMoniker": "Controllers\\MediaController.cs",
+              "ToolTip": "C:\\Users\\Leonardo\\Documents\\Projeto\\OptimusFrame.Core.API\\optimus-frame-core\\Controllers\\MediaController.cs",
+              "RelativeToolTip": "Controllers\\MediaController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABQAAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-02-04T00:55:54.874Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "OptimusFrame.Core.API",
+              "DocumentMoniker": "C:\\Users\\Leonardo\\Documents\\Projeto\\OptimusFrame.Core.API\\optimus-frame-core\\OptimusFrame.Core.API.csproj",
+              "RelativeDocumentMoniker": "OptimusFrame.Core.API.csproj",
+              "ToolTip": "C:\\Users\\Leonardo\\Documents\\Projeto\\OptimusFrame.Core.API\\optimus-frame-core\\OptimusFrame.Core.API.csproj",
+              "RelativeToolTip": "OptimusFrame.Core.API.csproj",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABMAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2026-02-04T00:52:48.988Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:128:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\Leonardo\\Documents\\Projeto\\OptimusFrame.Core.API\\optimus-frame-core\\Program.cs",
+              "RelativeDocumentMoniker": "Program.cs",
+              "ToolTip": "C:\\Users\\Leonardo\\Documents\\Projeto\\OptimusFrame.Core.API\\optimus-frame-core\\Program.cs",
+              "RelativeToolTip": "Program.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-02-04T00:51:39.145Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

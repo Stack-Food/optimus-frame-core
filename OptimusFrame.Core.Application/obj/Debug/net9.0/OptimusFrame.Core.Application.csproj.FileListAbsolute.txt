@@ -1,0 +1,12 @@
+C:\Users\Leonardo\Documents\Projeto\OptimusFrame.Core.API\OptimusFrame.Core.Application\bin\Debug\net9.0\OptimusFrame.Core.Application.deps.json
+C:\Users\Leonardo\Documents\Projeto\OptimusFrame.Core.API\OptimusFrame.Core.Application\bin\Debug\net9.0\OptimusFrame.Core.Application.dll
+C:\Users\Leonardo\Documents\Projeto\OptimusFrame.Core.API\OptimusFrame.Core.Application\bin\Debug\net9.0\OptimusFrame.Core.Application.pdb
+C:\Users\Leonardo\Documents\Projeto\OptimusFrame.Core.API\OptimusFrame.Core.Application\obj\Debug\net9.0\OptimusFrame.Core.Application.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Leonardo\Documents\Projeto\OptimusFrame.Core.API\OptimusFrame.Core.Application\obj\Debug\net9.0\OptimusFrame.Core.Application.AssemblyInfoInputs.cache
+C:\Users\Leonardo\Documents\Projeto\OptimusFrame.Core.API\OptimusFrame.Core.Application\obj\Debug\net9.0\OptimusFrame.Core.Application.AssemblyInfo.cs
+C:\Users\Leonardo\Documents\Projeto\OptimusFrame.Core.API\OptimusFrame.Core.Application\obj\Debug\net9.0\OptimusFrame.Core.Application.csproj.CoreCompileInputs.cache
+C:\Users\Leonardo\Documents\Projeto\OptimusFrame.Core.API\OptimusFrame.Core.Application\obj\Debug\net9.0\OptimusFrame.Core.Application.sourcelink.json
+C:\Users\Leonardo\Documents\Projeto\OptimusFrame.Core.API\OptimusFrame.Core.Application\obj\Debug\net9.0\OptimusFrame.Core.Application.dll
+C:\Users\Leonardo\Documents\Projeto\OptimusFrame.Core.API\OptimusFrame.Core.Application\obj\Debug\net9.0\refint\OptimusFrame.Core.Application.dll
+C:\Users\Leonardo\Documents\Projeto\OptimusFrame.Core.API\OptimusFrame.Core.Application\obj\Debug\net9.0\OptimusFrame.Core.Application.pdb
+C:\Users\Leonardo\Documents\Projeto\OptimusFrame.Core.API\OptimusFrame.Core.Application\obj\Debug\net9.0\ref\OptimusFrame.Core.Application.dll

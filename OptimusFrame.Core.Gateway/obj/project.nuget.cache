@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "8yeVJ+DabjU=",
+  "success": true,
+  "projectFilePath": "C:\\Users\\Leonardo\\Documents\\Projeto\\OptimusFrame.Core.API\\OptimusFrame.Core.Gateway\\OptimusFrame.Core.Gateway.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Leonardo\\.nuget\\packages\\awssdk.core\\4.0.3.12\\awssdk.core.4.0.3.12.nupkg.sha512",
+    "C:\\Users\\Leonardo\\.nuget\\packages\\awssdk.s3\\4.0.18.2\\awssdk.s3.4.0.18.2.nupkg.sha512"
+  ],
+  "logs": []
+}
