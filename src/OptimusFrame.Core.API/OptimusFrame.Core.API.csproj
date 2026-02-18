@@ -8,12 +8,19 @@
 
   <ItemGroup>
     <PackageReference Include="AspNetCore.HealthChecks.NpgSql" Version="8.0.1" />
+    <PackageReference Include="AWSSDK.Core" Version="4.0.3.14" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.22" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Optimus.Frame.Core.Domain\OptimusFrame.Core.Domain.csproj" />
+    <ProjectReference Include="..\OptimusFrame.Core.Application\OptimusFrame.Core.Application.csproj" />
+    <ProjectReference Include="..\OptimusFrame.Core.Infrastructure\OptimusFrame.Core.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>
