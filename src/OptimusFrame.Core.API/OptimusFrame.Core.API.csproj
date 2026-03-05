@@ -9,11 +9,13 @@
   <ItemGroup>
     <PackageReference Include="AspNetCore.HealthChecks.NpgSql" Version="8.0.1" />
     <PackageReference Include="AWSSDK.Core" Version="4.0.3.14" />
+    <PackageReference Include="AWSSDK.Extensions.NETCore.Setup" Version="4.0.3.14" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.22" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="RabbitMQ.Client" Version="7.2.1" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
   </ItemGroup>
 

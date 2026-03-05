@@ -3,10 +3,11 @@ using Microsoft.AspNetCore.Mvc;
 using OptimusFrame.Core.Application.DTOs.Request;
 using OptimusFrame.Core.Application.DTOs.Response;
 using OptimusFrame.Core.Application.UseCases.UploadMedia;
+
 namespace optimus_frame_core.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/media")]
     [ExcludeFromCodeCoverage]
     public class MediaController : ControllerBase
     {
@@ -37,8 +38,11 @@ namespace optimus_frame_core.Controllers
 
                 byte[] videoBytes = Convert.FromBase64String(base64Data);
 
+                if (videoBytes.Length == 0)
+                    return BadRequest("Base64 não contém dados válidos.");
+
                 // envia o video
-                 _uploadMediaUseCase.UploadVideoToS3(videoBytes, request);
+                _uploadMediaUseCase.UploadVideoToS3(videoBytes, request);
 
                 var response = new UploadVideoResponse
                 {
