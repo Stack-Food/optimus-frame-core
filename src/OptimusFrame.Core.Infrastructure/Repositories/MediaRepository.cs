@@ -12,7 +12,21 @@ namespace OptimusFrame.Core.Infrastructure.Repositories
     {
         public Task<Media> CreateAsync(Media media)
         {
-            throw new NotImplementedException();
+            if (media == null)
+            {
+                throw new ArgumentNullException(nameof(media));
+            }
+
+            var created = new Media
+            {
+                MediaId = Guid.NewGuid(),
+                UserName = media.UserName,
+                Base64 = media.Base64,
+                Status = media.Status,
+                CreatedAt = media.CreatedAt
+            };
+
+            return Task.FromResult(created);
         }
     }
 }
