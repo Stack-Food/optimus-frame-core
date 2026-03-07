@@ -15,7 +15,6 @@ public class Program
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Services
             builder.Services.AddDefaultAWSOptions(builder.Configuration.GetAWSOptions());
             builder.Services.AddAWSService<IAmazonS3>();
 
@@ -33,7 +32,6 @@ public class Program
 
             var app = builder.Build();
 
-            // Middleware / HTTP request pipeline
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();

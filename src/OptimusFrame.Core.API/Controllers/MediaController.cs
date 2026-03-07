@@ -20,7 +20,7 @@ namespace optimus_frame_core.Controllers
         [HttpPost("upload")]
         [ProducesResponseType(typeof(UploadVideoResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public IActionResult UploadVideoBase64([FromBody] UploadVideoBase64Request request)
+        public async Task<IActionResult> UploadVideoBase64Async([FromBody] UploadVideoBase64Request request)
         {
             if (string.IsNullOrWhiteSpace(request.Base64))
                 return BadRequest("Base64 não informado.");
@@ -42,8 +42,7 @@ namespace optimus_frame_core.Controllers
 
                 byte[] videoBytes = Convert.FromBase64String(base64Data);
 
-                // envia o video
-                 _uploadMediaUseCase.UploadVideoToS3(videoBytes, request);
+                await _uploadMediaUseCase.UploadVideoToS3(videoBytes, request);
 
                 var response = new UploadVideoResponse
                 {

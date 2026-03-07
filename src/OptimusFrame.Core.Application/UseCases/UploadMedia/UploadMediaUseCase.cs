@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
 using OptimusFrame.Core.Application.DTOs.Request;
 using OptimusFrame.Core.Application.Events;
 using OptimusFrame.Core.Application.Interfaces;
@@ -16,19 +17,19 @@ namespace OptimusFrame.Core.Application.UseCases.UploadMedia
         private readonly IMediaRepository _mediaRepository;
         private readonly IMediaService _mediaService;
         private readonly IVideoEventPublisher _publisher;
+        private readonly IConfiguration _configuration;
 
-        public UploadMediaUseCase(IMediaRepository mediaRepository, IMediaService mediaService, IVideoEventPublisher videoEventPublisher)
+        public UploadMediaUseCase(IMediaRepository mediaRepository, IMediaService mediaService, IVideoEventPublisher videoEventPublisher, IConfiguration configuration)
         {
             _mediaRepository = mediaRepository;
             _mediaService = mediaService;
             _publisher = videoEventPublisher;
+            _configuration = configuration;
         }
 
         public async Task UploadVideoToS3(byte[] videoBytes, UploadVideoBase64Request request)
         {
-            //salvar no s3
-            var bucketName = "bucketmedianame";
-            //var bucketName = "bucketmedianame";
+            var bucketName = _configuration["AWS:S3:BucketName"];
 
             var s3Key = await _mediaService.UploadVideoAsync(
                 videoBytes,
@@ -36,7 +37,6 @@ namespace OptimusFrame.Core.Application.UseCases.UploadMedia
                 request.UserName,
                 bucketName);
 
-            //enviar para uma fila
             await _publisher.Publish(new VideoProcessingMessage
             {
                 VideoId = Guid.NewGuid().ToString(),
@@ -44,7 +44,6 @@ namespace OptimusFrame.Core.Application.UseCases.UploadMedia
                 CorrelationId = Guid.NewGuid().ToString()
             });
 
-            //salvar no banco de dados
             var uploadFile = new Media
             {
                 Base64 = videoBytes.ToString(),
