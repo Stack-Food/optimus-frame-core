@@ -35,14 +35,8 @@ namespace OptimusFrame.Core.Application.UseCases.UploadMedia
                 request.FileName,
                 request.UserName,
                 bucketName);
-            //var s3Key = await _mediaService.UploadVideoAsync(
-            //    videoBytes,
-            //    request.FileName,
-            //    request.UserName,
-            //    bucketName);
 
             //enviar para uma fila
-
             await _publisher.Publish(new VideoProcessingMessage
             {
                 VideoId = Guid.NewGuid().ToString(),

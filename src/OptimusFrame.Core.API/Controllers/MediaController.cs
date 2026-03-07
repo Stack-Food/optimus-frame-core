@@ -12,8 +12,7 @@ namespace optimus_frame_core.Controllers
     {
         private readonly UploadMediaUseCase _uploadMediaUseCase;
 
-        public MediaController(
-            UploadMediaUseCase uploadMediaUseCase)
+        public MediaController(UploadMediaUseCase uploadMediaUseCase)
         {
             _uploadMediaUseCase = uploadMediaUseCase;
         }
@@ -34,6 +33,12 @@ namespace optimus_frame_core.Controllers
                 var base64Data = request.Base64.Contains(",")
                     ? request.Base64.Split(',')[1]
                     : request.Base64;
+
+                base64Data = base64Data
+                    .Trim()
+                    .Replace("\n", "")
+                    .Replace("\r", "")
+                    .Replace(" ", "");
 
                 byte[] videoBytes = Convert.FromBase64String(base64Data);
 
