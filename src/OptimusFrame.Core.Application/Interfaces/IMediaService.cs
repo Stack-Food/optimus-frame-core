@@ -8,6 +8,6 @@ namespace OptimusFrame.Core.Application.Interfaces
 {
     public interface IMediaService
     {
-        Task<string> UploadVideoAsync(byte[] fileBytes,string fileName,string userName,string bucketName);
+        Task<string> UploadVideoAsync(byte[] fileBytes, Guid MediaId, string userName,string bucketName);
     }
 }

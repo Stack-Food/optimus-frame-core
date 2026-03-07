@@ -3,9 +3,11 @@ using Amazon.S3;
 using OptimusFrame.Core.Application.Interfaces;
 using OptimusFrame.Core.Application.UseCases.UploadMedia;
 using OptimusFrame.Core.Infrastructure.Messaging;
-using OptimusFrame.Core.Infrastructure.Repositories;
 using OptimusFrame.Core.Infrastructure.Services;
 using System.Diagnostics.CodeAnalysis;
+using OptimusFrame.Core.Infrastructure.Repositories;
+using OptimusFrame.Core.Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace OptimusFrame.Core.API
 {
@@ -30,7 +32,29 @@ public class Program
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
+            var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
+                ?? "Host=localhost;Port=5432;Database=production_db;Username=postgres;Password=postgres";
+
+            builder.Services.AddDbContext<AppDbContext>(options => options.UseNpgsql(connectionString));
+
+            builder.Services.AddHealthChecks().AddNpgSql(connectionString);
+
             var app = builder.Build();
+
+            using (var scope = app.Services.CreateScope())
+            {
+                var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+                try
+                {
+                    dbContext.Database.Migrate();
+                    Console.WriteLine("Migrations applied successfully");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error applying migrations: {ex.Message}");
+                    throw;
+                }
+            }
 
             if (app.Environment.IsDevelopment())
             {
