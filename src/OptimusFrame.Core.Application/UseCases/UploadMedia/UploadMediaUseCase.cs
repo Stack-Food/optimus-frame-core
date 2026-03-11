@@ -29,21 +29,6 @@ namespace OptimusFrame.Core.Application.UseCases.UploadMedia
 
         public async Task UploadVideoToS3(byte[] videoBytes, UploadVideoBase64Request request)
         {
-            var bucketName = _configuration["AWS:S3:BucketName"];
-
-            var s3Key = await _mediaService.UploadVideoAsync(
-                videoBytes,
-                request.FileName,
-                request.UserName,
-                bucketName);
-
-            await _publisher.Publish(new VideoProcessingMessage
-            {
-                VideoId = Guid.NewGuid().ToString(),
-                FileName = request.FileName,
-                CorrelationId = Guid.NewGuid().ToString()
-            });
-
             var uploadFile = new Media
             {
                 Base64 = videoBytes.ToString(),
@@ -52,7 +37,22 @@ namespace OptimusFrame.Core.Application.UseCases.UploadMedia
                 Status = MediaStatus.Uploaded,
             };
 
-            await _mediaRepository.CreateAsync(uploadFile);
+            var response = _mediaRepository.CreateAsync(uploadFile);
+            var idMedia = response.Result.MediaId;
+            var bucketName = _configuration["AWS:S3:BucketName"];
+
+            var s3Key = await _mediaService.UploadVideoAsync(
+                videoBytes,
+                idMedia,
+                request.UserName,
+                bucketName);
+
+            await _publisher.Publish(new VideoProcessingMessage
+            {
+                VideoId = idMedia.ToString(),
+                FileName = request.FileName,
+                CorrelationId = Guid.NewGuid().ToString()
+            });
         }
     }
 }

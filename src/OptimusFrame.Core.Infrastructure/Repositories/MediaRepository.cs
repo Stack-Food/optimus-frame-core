@@ -5,28 +5,29 @@ using System.Text;
 using System.Threading.Tasks;
 using OptimusFrame.Core.Application.Interfaces;
 using OptimusFrame.Core.Domain.Entities;
+using OptimusFrame.Core.Infrastructure.Data;
 
 namespace OptimusFrame.Core.Infrastructure.Repositories
 {
     public class MediaRepository : IMediaRepository
     {
-        public Task<Media> CreateAsync(Media media)
+        private readonly AppDbContext _context;
+        public MediaRepository(AppDbContext context)
+        {
+            _context = context;
+        }
+        public async Task<Media> CreateAsync(Media media)
         {
             if (media == null)
-            {
                 throw new ArgumentNullException(nameof(media));
-            }
 
-            var created = new Media
-            {
-                MediaId = Guid.NewGuid(),
-                UserName = media.UserName,
-                Base64 = media.Base64,
-                Status = media.Status,
-                CreatedAt = media.CreatedAt
-            };
+            media.MediaId = Guid.NewGuid();
 
-            return Task.FromResult(created);
+            _context.Media.Add(media);
+
+            await _context.SaveChangesAsync();
+
+            return media;
         }
     }
 }

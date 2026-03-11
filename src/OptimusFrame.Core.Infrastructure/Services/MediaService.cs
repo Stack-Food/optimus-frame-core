@@ -18,11 +18,11 @@ namespace OptimusFrame.Core.Infrastructure.Services
             _s3Client = s3Client;
         }
 
-        public async Task<string> UploadVideoAsync(byte[] fileBytes, string fileName, string userName, string bucketName)
+        public async Task<string> UploadVideoAsync(byte[] fileBytes, Guid MediaId, string userName, string bucketName)
         {
             var date = DateTime.UtcNow.ToString("yyyy-MM-dd");
 
-            var key = $"bucket_upload/{userName}/{fileName}_{date}.mp4";
+            var key = $"bucket_upload/{userName}/{MediaId}_{date}.mp4";
 
             using var stream = new MemoryStream(fileBytes);
 
