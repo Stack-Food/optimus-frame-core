@@ -22,7 +22,7 @@ on:
 env:
   DOTNET_VERSION: '8.0.x'
   REGISTRY: ghcr.io
-  IMAGE_NAME: optimusframe-auth
+  IMAGE_NAME: optimus-frame-core
 
 jobs:
 
@@ -45,13 +45,13 @@ jobs:
           dotnet-version: ${{ env.DOTNET_VERSION }}
 
       - name: Restore dependencies
-        run: dotnet restore OptimusFrame.Auth.sln
+        run: dotnet restore OptimusFrame.Core.sln
 
       - name: Build solution
-        run: dotnet build OptimusFrame.Auth.sln --configuration Release --no-restore
+        run: dotnet build OptimusFrame.Core.sln --configuration Release --no-restore
 
       - name: Run tests
-        run: dotnet test OptimusFrame.Auth.sln --configuration Release --no-build --verbosity normal --collect:"XPlat Code Coverage"
+        run: dotnet test OptimusFrame.Core.sln --configuration Release --no-build --verbosity normal --collect:"XPlat Code Coverage"
 
       - name: Upload coverage report
         uses: actions/upload-artifact@v4
@@ -90,9 +90,9 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: .
-          file: src/OptimusFrame.Auth.API/Dockerfile
+          file: Dockerfile
           push: false
-          tags: ${{ steps.meta.outputs.image_prefix }}-optimusframe-auth:${{ steps.meta.outputs.primary_tag }}
+          tags: ${{ steps.meta.outputs.image_prefix }}-${{ env.IMAGE_NAME }}:${{ steps.meta.outputs.primary_tag }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
@@ -138,11 +138,11 @@ jobs:
           COMMIT_SHA=$(echo ${{ github.sha }} | cut -c1-7)
           OWNER="${{ steps.repo_owner.outputs.owner_lc }}"
           if [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
-            echo "image_name=prod-$IMAGE_NAME" >> $GITHUB_OUTPUT
-            echo "tags=$REGISTRY/$OWNER/prod-$IMAGE_NAME:$COMMIT_SHA" >> $GITHUB_OUTPUT
+            echo "image_name=prod-${{ env.IMAGE_NAME }}" >> $GITHUB_OUTPUT
+            echo "tags=${{ env.REGISTRY }}/$OWNER/prod-${{ env.IMAGE_NAME }}:$COMMIT_SHA" >> $GITHUB_OUTPUT
           else
-            echo "image_name=dev-$IMAGE_NAME" >> $GITHUB_OUTPUT
-            echo "tags=$REGISTRY/$OWNER/dev-$IMAGE_NAME:$COMMIT_SHA" >> $GITHUB_OUTPUT
+            echo "image_name=dev-${{ env.IMAGE_NAME }}" >> $GITHUB_OUTPUT
+            echo "tags=${{ env.REGISTRY }}/$OWNER/dev-${{ env.IMAGE_NAME }}:$COMMIT_SHA" >> $GITHUB_OUTPUT
           fi
 
       - name: Build and Push Docker image
@@ -150,7 +150,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: .
-          file: src/OptimusFrame.Auth.API/Dockerfile
+          file: Dockerfile
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           cache-from: type=gha
@@ -196,10 +196,10 @@ jobs:
         id: deploy_params
         run: |
           if [[ "${{ inputs.environment }}" == "production" ]]; then
-            echo "image_name=prod-$IMAGE_NAME" >> $GITHUB_OUTPUT
+            echo "image_name=prod-${{ env.IMAGE_NAME }}" >> $GITHUB_OUTPUT
             echo "namespace=production" >> $GITHUB_OUTPUT
           else
-            echo "image_name=dev-$IMAGE_NAME" >> $GITHUB_OUTPUT
+            echo "image_name=dev-${{ env.IMAGE_NAME }}" >> $GITHUB_OUTPUT
             echo "namespace=develop" >> $GITHUB_OUTPUT
           fi
           # Get latest commit hash for the branch
@@ -214,16 +214,16 @@ jobs:
           REPO_OWNER: ${{ steps.repo_owner.outputs.owner_lc }}
         run: |
           # Update the deployment image
-          kubectl set image deployment/optimusframe-auth \
-            optimusframe-auth=$REGISTRY/$REPO_OWNER/$IMAGE_NAME_FULL:$IMAGE_TAG \
+          kubectl set image deployment/optimus-frame-core \
+            optimus-frame-core=${{ env.REGISTRY }}/$REPO_OWNER/$IMAGE_NAME_FULL:$IMAGE_TAG \
             -n $NAMESPACE
-          
+
           # Wait for rollout to complete
-          kubectl rollout status deployment/optimusframe-auth -n $NAMESPACE --timeout=5m
-          
+          kubectl rollout status deployment/optimus-frame-core -n $NAMESPACE --timeout=5m
+
           # Apply manifests to ensure configuration is up to date
           kubectl apply -f k8s/deployment.yaml -n $NAMESPACE
           kubectl apply -f k8s/service.yaml -n $NAMESPACE
-          
+
           echo "✅ Deployment successful to $NAMESPACE environment"
-          echo "📦 Image: $REGISTRY/$REPO_OWNER/$IMAGE_NAME_FULL:$IMAGE_TAG"
+          echo "📦 Image: ${{ env.REGISTRY }}/$REPO_OWNER/$IMAGE_NAME_FULL:$IMAGE_TAG"
