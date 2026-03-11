@@ -1,0 +1,6 @@
+@OptimusFrame.Core.API_HostAddress = http://localhost:5287
+
+GET {{OptimusFrame.Core.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
