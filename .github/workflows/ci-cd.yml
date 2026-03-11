@@ -1,4 +1,4 @@
-name: CI/CD - Payments Microservice
+name: CI/CD - OptimusFrame Core Microservice
 
 on:
   push:
@@ -7,136 +7,66 @@ on:
     branches: [main, develop]
   workflow_dispatch:
 env:
+  DOTNET_VERSION: '8.0.x'
   REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}
+  IMAGE_NAME: optimusframe-core
 
 jobs:
-  code-tests:
-    name: Run Code Tests and Generate Coverage Report
+
+  build-and-test:
+    name: Build and Test
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      pull-requests: write
 
     steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      - name: Setup .NET
+      - name: Setup .NET 8
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: "8.0.x"
+          dotnet-version: ${{ env.DOTNET_VERSION }}
 
       - name: Restore dependencies
-        run: dotnet restore
+        run: dotnet restore OptimusFrame.Core.sln
 
-      - name: Build
-        run: dotnet build --configuration Release --no-restore
+      - name: Build solution
+        run: dotnet build OptimusFrame.Core.sln --configuration Release --no-restore
 
-      - name: Test
-        run: dotnet test --configuration Release --no-build --verbosity normal --collect:"XPlat Code Coverage" --results-directory ./TestResults/
+      - name: Run tests
+        run: dotnet test OptimusFrame.Core.sln --configuration Release --no-build --collect:"XPlat Code Coverage" --results-directory ./TestResults/
 
-      - name: Code Coverage Report
-        uses: irongut/CodeCoverageSummary@v1.3.0
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v4
         with:
-          filename: TestResults/**/coverage.cobertura.xml
-          badge: true
-          fail_below_min: false
-          format: markdown
-          hide_branch_rate: false
-          hide_complexity: false
-          indicators: true
-          output: both
-          thresholds: "60 80"
+          name: coverage-report
+          path: '**/coverage.cobertura.xml'
 
-      - name: Add Coverage PR Comment
-        uses: marocchino/sticky-pull-request-comment@v2
-        if: github.event_name == 'pull_request'
-        with:
-          recreate: true
-          path: code-coverage-results.md
-
-  docker-build:
-    name: Docker Build
+  docker-build-and-push:
+    name: Build and Push Docker Image
     runs-on: ubuntu-latest
-    needs: code-tests
+    needs: build-and-test
 
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
-      - name: Set Docker tag
-        id: docker_tag
-        run: |
-          if [[ "${GITHUB_REF##*/}" == "main" ]]; then
-            echo "tag=main" >> $GITHUB_OUTPUT
-          elif [[ "${GITHUB_REF##*/}" == "develop" ]]; then
-            echo "tag=develop" >> $GITHUB_OUTPUT
-          else
-            echo "tag=${GITHUB_SHA}" >> $GITHUB_OUTPUT
-          fi
-
-      - name: Build Docker image
-        uses: docker/build-push-action@v5
-        with:
-          context: .
-          file: ./src/OptimusFrame.Core.API/Dockerfile
-          push: false
-          tags: optimus-frame-api:${{ steps.docker_tag.outputs.tag }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
-
-  docker-push:
-    name: Docker Push to GHCR
-    runs-on: ubuntu-latest
-    needs: docker-build
     permissions:
       contents: read
       packages: write
-    if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop')
+
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      - name: Install cosign
-        if: github.event_name != 'pull_request'
-        uses: sigstore/cosign-installer@v4.0.0
-        with:
-          cosign-release: "v3.0.2"
+      - name: Login to GitHub Container Registry
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ${{ env.REGISTRY }} -u ${{ github.actor }} --password-stdin
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
+      - name: Set lowercase repository owner
+        run: echo "REPO_OWNER=$(echo '${{ github.repository_owner }}' | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
 
-      - name: Log in to GHCR
-        if: github.event_name != 'pull_request'
-        uses: docker/login-action@v3
-        with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build Docker Image
+        run: |
+          docker build \
+            -f src/OptimusFrame.Core.API/Dockerfile \
+            -t $REGISTRY/$REPO_OWNER/$IMAGE_NAME:latest \
+            .
 
-      # Extract metadata (tags, labels) for Docker
-      # https://github.com/docker/metadata-action
-      - name: Extract Docker metadata
-        id: meta
-        uses: docker/metadata-action@v5.10.0
-        with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-
-      - name: Prepare repository owner
-        id: repo_owner
-        run: echo "owner_lc=$(echo '${{ github.repository_owner }}' | tr '[:upper:]' '[:lower:]')" >> $GITHUB_OUTPUT
-
-      - name: Build and Push Docker image
-        id: build-and-push
-        uses: docker/build-push-action@v5
-        with:
-          context: .
-          file: ./src/OptimusFrame.Core.API/Dockerfile
-          push: true
-          tags: |
-            ghcr.io/${{ steps.repo_owner.outputs.owner_lc }}/optimus-frame-api:${{ github.ref_name }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+      - name: Push Docker Image
+        run: |
+          docker push $REGISTRY/$REPO_OWNER/$IMAGE_NAME:latest

@@ -1,9 +1,10 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using Amazon.S3;
+﻿using Amazon.S3;
 using OptimusFrame.Core.Application.Interfaces;
 using OptimusFrame.Core.Application.UseCases.UploadMedia;
 using OptimusFrame.Core.Infrastructure.Messaging;
+using OptimusFrame.Core.Infrastructure.Messaging.Consumers;
 using OptimusFrame.Core.Infrastructure.Services;
+using RabbitMQ.Client;
 using System.Diagnostics.CodeAnalysis;
 using OptimusFrame.Core.Infrastructure.Repositories;
 using OptimusFrame.Core.Infrastructure.Data;
@@ -21,11 +22,14 @@ public class Program
             builder.Services.AddAWSService<IAmazonS3>();
 
             builder.Services.AddSingleton<RabbitMqConnection>();
+
             builder.Services.AddSingleton<VideoPublisher>();
 
             builder.Services.AddScoped<IMediaService, MediaService>();
+            builder.Services.AddScoped<INotificationService, NotificationService>();
             builder.Services.AddScoped<IMediaRepository, MediaRepository>();
             builder.Services.AddScoped<IVideoEventPublisher, VideoPublisher>();
+            builder.Services.AddHostedService<VideoProcessingCompletedConsumer>();
             builder.Services.AddScoped<UploadMediaUseCase>();
 
             builder.Services.AddControllers();

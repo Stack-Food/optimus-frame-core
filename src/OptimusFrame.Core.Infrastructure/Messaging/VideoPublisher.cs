@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.Json;
-using System.Threading.Tasks;
-using OptimusFrame.Core.Application.Events;
+﻿using OptimusFrame.Core.Application.Events;
 using OptimusFrame.Core.Application.Interfaces;
 using RabbitMQ.Client;
+using System.Text;
+using System.Text.Json;
 
 namespace OptimusFrame.Core.Infrastructure.Messaging
 {
