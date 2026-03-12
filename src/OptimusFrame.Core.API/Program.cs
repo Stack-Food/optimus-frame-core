@@ -10,6 +10,8 @@ using OptimusFrame.Core.Infrastructure.Messaging;
 using OptimusFrame.Core.Infrastructure.Messaging.Consumers;
 using OptimusFrame.Core.Infrastructure.Repositories;
 using OptimusFrame.Core.Infrastructure.Services;
+using OptimusFrame.Core.API.HealthChecks;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using System.Diagnostics.CodeAnalysis;
 
 namespace OptimusFrame.Core.API
@@ -50,7 +52,21 @@ public class Program
 
             builder.Services.AddDbContext<AppDbContext>(options => options.UseNpgsql(connectionString));
 
-            builder.Services.AddHealthChecks().AddNpgSql(connectionString);
+            // Configure Health Checks
+            var rabbitMqSettings = builder.Configuration.GetSection("RabbitMQ").Get<RabbitMqSettings>()
+                ?? new RabbitMqSettings();
+
+            var rabbitMqConnectionString = $"amqp://{rabbitMqSettings.UserName}:{rabbitMqSettings.Password}@{rabbitMqSettings.HostName}:{rabbitMqSettings.Port}{rabbitMqSettings.VirtualHost}";
+
+            builder.Services.AddHealthChecks()
+                .AddNpgSql(
+                    connectionString,
+                    name: "postgresql",
+                    tags: new[] { "db", "sql", "postgresql" })
+                .AddRabbitMQ(
+                    rabbitMqConnectionString,
+                    name: "rabbitmq",
+                    tags: new[] { "messaging", "rabbitmq" });
 
             var app = builder.Build();
 
@@ -78,6 +94,24 @@ public class Program
             app.UseHttpsRedirection();
 
             app.MapControllers();
+
+            // Health Check Endpoints
+            app.MapHealthChecks("/health", new HealthCheckOptions
+            {
+                ResponseWriter = HealthCheckResponseWriter.WriteHealthCheckResponse
+            });
+
+            app.MapHealthChecks("/health/ready", new HealthCheckOptions
+            {
+                Predicate = check => check.Tags.Contains("db") || check.Tags.Contains("messaging"),
+                ResponseWriter = HealthCheckResponseWriter.WriteHealthCheckResponse
+            });
+
+            app.MapHealthChecks("/health/live", new HealthCheckOptions
+            {
+                Predicate = _ => false, // Liveness - just checks if app is running
+                ResponseWriter = HealthCheckResponseWriter.WriteHealthCheckResponse
+            });
 
             app.Run();
         }
