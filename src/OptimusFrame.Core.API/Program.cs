@@ -1,4 +1,5 @@
 ﻿using Amazon.S3;
+using Amazon.SimpleEmail;
 using OptimusFrame.Core.Application.Interfaces;
 using OptimusFrame.Core.Application.UseCases.UploadMedia;
 using OptimusFrame.Core.Application.UseCases.GetUserVideos;
@@ -22,6 +23,7 @@ public class Program
 
             builder.Services.AddDefaultAWSOptions(builder.Configuration.GetAWSOptions());
             builder.Services.AddAWSService<IAmazonS3>();
+            builder.Services.AddAWSService<IAmazonSimpleEmailService>();
 
             builder.Services.Configure<RabbitMqSettings>(
                 builder.Configuration.GetSection("RabbitMQ"));
