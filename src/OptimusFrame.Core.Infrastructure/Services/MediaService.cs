@@ -38,5 +38,21 @@ namespace OptimusFrame.Core.Infrastructure.Services
 
             return key;
         }
+
+        public async Task<string> GenerateDownloadUrlAsync(string s3Key, int expirationMinutes = 60)
+        {
+            var bucketName = "optimus-bucket";
+
+            var request = new GetPreSignedUrlRequest
+            {
+                BucketName = bucketName,
+                Key = s3Key,
+                Expires = DateTime.UtcNow.AddMinutes(expirationMinutes)
+            };
+
+            var url = await Task.FromResult(_s3Client.GetPreSignedURL(request));
+
+            return url;
+        }
     }
 }

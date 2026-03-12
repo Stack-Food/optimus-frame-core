@@ -10,6 +10,8 @@ namespace OptimusFrame.Core.Domain.Enums
     {
         Process,
         Uploaded,
-        Error
+        Error,
+        Completed,
+        Failed
     }
 }

@@ -16,5 +16,9 @@ namespace OptimusFrame.Core.Domain.Entities
         public string UrlBucket { get; set; }
         public DateTime CreatedAt { get; set; }
         public MediaStatus Status { get; set; }
+        public string? OutputUri { get; set; }
+        public DateTime? CompletedAt { get; set; }
+        public string? ErrorMessage { get; set; }
+        public string FileName { get; set; }
     }
 }

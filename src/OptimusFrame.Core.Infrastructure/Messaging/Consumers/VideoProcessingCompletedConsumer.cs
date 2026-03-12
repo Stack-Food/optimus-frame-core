@@ -3,6 +3,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using OptimusFrame.Core.Application.Events;
 using OptimusFrame.Core.Application.Interfaces;
+using OptimusFrame.Core.Domain.Enums;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using System.Text;
@@ -17,7 +18,7 @@ namespace OptimusFrame.Core.Infrastructure.Messaging.Consumers
         private IConnection? _connection;
         private IChannel? _channel;
 
-        private const string QueueName = "video-processing-completed-queue";
+        private const string QueueName = "video.processing.completed";
 
         private readonly IServiceScopeFactory _scopeFactory;
 
@@ -60,26 +61,59 @@ namespace OptimusFrame.Core.Infrastructure.Messaging.Consumers
             var message = JsonSerializer.Deserialize<VideoProcessingCompletedMessage>(json);
 
             if (message == null)
-                return;
-
-            if (!message.Success)
             {
-                using var scope = _scopeFactory.CreateScope();
-
-                var notificationService = scope.ServiceProvider
-                    .GetRequiredService<INotificationService>();
-
-                _logger.LogError("Video processing failed for video {VideoId}. Notificating user... Error: {ErrorMessage}",
-                    message.VideoId, message.ErrorMessage);
-
-                await notificationService.NotifyProcessingFailureAsync(
-                    message.VideoId,
-                    message.ErrorMessage,
-                    message.CorrelationId);
+                _logger.LogWarning("Received null message from queue");
+                await _channel!.BasicAckAsync(args.DeliveryTag, false);
+                return;
             }
 
-            _logger.LogInformation("Received video processing completed message for video {VideoId} with success status {Success}",
-                message.VideoId, message.Success);
+            using var scope = _scopeFactory.CreateScope();
+            var mediaRepository = scope.ServiceProvider.GetRequiredService<IMediaRepository>();
+
+            try
+            {
+                if (message.Success)
+                {
+                    _logger.LogInformation("Video processing completed successfully for video {VideoId}. Updating status...",
+                        message.VideoId);
+
+                    await mediaRepository.UpdateStatusAsync(
+                        Guid.Parse(message.VideoId),
+                        MediaStatus.Completed,
+                        message.OutputUri,
+                        null);
+
+                    _logger.LogInformation("Status updated to Completed for video {VideoId}", message.VideoId);
+                }
+                else
+                {
+                    _logger.LogError("Video processing failed for video {VideoId}. Error: {ErrorMessage}",
+                        message.VideoId, message.ErrorMessage);
+
+                    await mediaRepository.UpdateStatusAsync(
+                        Guid.Parse(message.VideoId),
+                        MediaStatus.Failed,
+                        null,
+                        message.ErrorMessage);
+
+                    var notificationService = scope.ServiceProvider
+                        .GetRequiredService<INotificationService>();
+
+                    await notificationService.NotifyProcessingFailureAsync(
+                        message.VideoId,
+                        message.ErrorMessage,
+                        message.CorrelationId);
+
+                    _logger.LogInformation("Status updated to Failed and user notified for video {VideoId}", message.VideoId);
+                }
+
+                await _channel!.BasicAckAsync(args.DeliveryTag, false);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error processing completed message for video {VideoId}", message.VideoId);
+                await _channel!.BasicNackAsync(args.DeliveryTag, false, true);
+            }
         }
     }
 }
