@@ -1,8 +1,10 @@
 using Microsoft.Extensions.Diagnostics.HealthChecks;
+using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 
 namespace OptimusFrame.Core.API.HealthChecks;
 
+[ExcludeFromCodeCoverage]
 public static class HealthCheckResponseWriter
 {
     public static Task WriteHealthCheckResponse(HttpContext context, HealthReport healthReport)
