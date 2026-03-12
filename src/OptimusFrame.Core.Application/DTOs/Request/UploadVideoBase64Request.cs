@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Diagnostics.CodeAnalysis;
 
 namespace OptimusFrame.Core.Application.DTOs.Request
 {
+    [ExcludeFromCodeCoverage]
     public class UploadVideoBase64Request
     {
         public string FileName { get; set; } = default!;
