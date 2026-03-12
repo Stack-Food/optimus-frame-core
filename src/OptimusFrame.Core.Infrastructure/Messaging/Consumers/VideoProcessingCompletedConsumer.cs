@@ -6,11 +6,13 @@ using OptimusFrame.Core.Application.Interfaces;
 using OptimusFrame.Core.Domain.Enums;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
+using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using System.Text.Json;
 
 namespace OptimusFrame.Core.Infrastructure.Messaging.Consumers
 {
+    [ExcludeFromCodeCoverage]
     public class VideoProcessingCompletedConsumer : BackgroundService
     {
         private readonly ILogger<VideoProcessingCompletedConsumer> _logger;

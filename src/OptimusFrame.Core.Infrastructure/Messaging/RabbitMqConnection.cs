@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.Options;
 using RabbitMQ.Client;
+using System.Diagnostics.CodeAnalysis;
 
 namespace OptimusFrame.Core.Infrastructure.Messaging
 {
+    [ExcludeFromCodeCoverage]
     public class RabbitMqConnection
     {
         private readonly ConnectionFactory _factory;

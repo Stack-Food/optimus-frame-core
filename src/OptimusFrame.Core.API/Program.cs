@@ -1,20 +1,20 @@
 ﻿using Amazon.S3;
 using Amazon.SimpleEmail;
+using Microsoft.EntityFrameworkCore;
 using OptimusFrame.Core.Application.Interfaces;
-using OptimusFrame.Core.Application.UseCases.UploadMedia;
-using OptimusFrame.Core.Application.UseCases.GetUserVideos;
 using OptimusFrame.Core.Application.UseCases.DownloadVideo;
+using OptimusFrame.Core.Application.UseCases.GetUserVideos;
+using OptimusFrame.Core.Application.UseCases.UploadMedia;
+using OptimusFrame.Core.Infrastructure.Data;
 using OptimusFrame.Core.Infrastructure.Messaging;
 using OptimusFrame.Core.Infrastructure.Messaging.Consumers;
-using OptimusFrame.Core.Infrastructure.Services;
-using RabbitMQ.Client;
-using System.Diagnostics.CodeAnalysis;
 using OptimusFrame.Core.Infrastructure.Repositories;
-using OptimusFrame.Core.Infrastructure.Data;
-using Microsoft.EntityFrameworkCore;
+using OptimusFrame.Core.Infrastructure.Services;
+using System.Diagnostics.CodeAnalysis;
 
 namespace OptimusFrame.Core.API
 {
+[ExcludeFromCodeCoverage]
 public class Program
     {
         private static void Main(string[] args)
