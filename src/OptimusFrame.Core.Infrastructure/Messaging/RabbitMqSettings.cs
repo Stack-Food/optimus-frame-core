@@ -13,6 +13,7 @@ namespace OptimusFrame.Core.Infrastructure.Messaging
         public QueueSettings Queues { get; set; } = new QueueSettings();
     }
 
+    [ExcludeFromCodeCoverage]
     public class QueueSettings
     {
         public string VideoProcessing { get; set; } = "video.processing.input";

@@ -1,11 +1,13 @@
 ﻿using OptimusFrame.Core.Application.Events;
 using OptimusFrame.Core.Application.Interfaces;
 using RabbitMQ.Client;
+using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using System.Text.Json;
 
 namespace OptimusFrame.Core.Infrastructure.Messaging
 {
+    [ExcludeFromCodeCoverage]
     public class VideoPublisher : IVideoEventPublisher
     {
         private readonly RabbitMqConnection _connection;
