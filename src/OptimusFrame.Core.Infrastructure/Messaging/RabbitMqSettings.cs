@@ -1,5 +1,8 @@
+using System.Diagnostics.CodeAnalysis;
+
 namespace OptimusFrame.Core.Infrastructure.Messaging
 {
+    [ExcludeFromCodeCoverage]
     public class RabbitMqSettings
     {
         public string HostName { get; set; } = "localhost";
