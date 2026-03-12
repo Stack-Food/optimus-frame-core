@@ -1,6 +1,8 @@
 ﻿using Amazon.S3;
 using OptimusFrame.Core.Application.Interfaces;
 using OptimusFrame.Core.Application.UseCases.UploadMedia;
+using OptimusFrame.Core.Application.UseCases.GetUserVideos;
+using OptimusFrame.Core.Application.UseCases.DownloadVideo;
 using OptimusFrame.Core.Infrastructure.Messaging;
 using OptimusFrame.Core.Infrastructure.Messaging.Consumers;
 using OptimusFrame.Core.Infrastructure.Services;
@@ -21,6 +23,9 @@ public class Program
             builder.Services.AddDefaultAWSOptions(builder.Configuration.GetAWSOptions());
             builder.Services.AddAWSService<IAmazonS3>();
 
+            builder.Services.Configure<RabbitMqSettings>(
+                builder.Configuration.GetSection("RabbitMQ"));
+
             builder.Services.AddSingleton<RabbitMqConnection>();
 
             builder.Services.AddSingleton<VideoPublisher>();
@@ -31,6 +36,8 @@ public class Program
             builder.Services.AddScoped<IVideoEventPublisher, VideoPublisher>();
             builder.Services.AddHostedService<VideoProcessingCompletedConsumer>();
             builder.Services.AddScoped<UploadMediaUseCase>();
+            builder.Services.AddScoped<GetUserVideosUseCase>();
+            builder.Services.AddScoped<DownloadVideoUseCase>();
 
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
