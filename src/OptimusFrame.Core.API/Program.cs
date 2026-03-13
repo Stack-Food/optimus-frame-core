@@ -56,9 +56,15 @@ public class Program
             var rabbitMqSettings = builder.Configuration.GetSection("RabbitMQ").Get<RabbitMqSettings>()
                 ?? new RabbitMqSettings();
 
-            var rabbitUser = Uri.EscapeDataString(rabbitMqSettings.UserName ?? "guest");
+            var rabbitHost = rabbitMqSettings.HostName?.Trim();
+            if (string.IsNullOrEmpty(rabbitHost))
+                throw new InvalidOperationException(
+                    "RabbitMQ HostName não está configurado. Verifique a variável de ambiente RabbitMQ__HostName.");
+
+            var rabbitUser = Uri.EscapeDataString(rabbitMqSettings.UserName?.Trim() ?? "guest");
             var rabbitPass = Uri.EscapeDataString(rabbitMqSettings.Password ?? "");
-            var rabbitMqConnectionString = $"amqp://{rabbitUser}:{rabbitPass}@{rabbitMqSettings.HostName}:{rabbitMqSettings.Port}{rabbitMqSettings.VirtualHost}";
+            var virtualHost = string.IsNullOrEmpty(rabbitMqSettings.VirtualHost) ? "/" : rabbitMqSettings.VirtualHost;
+            var rabbitMqConnectionString = $"amqp://{rabbitUser}:{rabbitPass}@{rabbitHost}:{rabbitMqSettings.Port}{virtualHost}";
 
             builder.Services.AddHealthChecks()
                 .AddNpgSql(
