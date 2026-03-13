@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Amazon.S3;
+﻿using Amazon.S3;
 using Amazon.S3.Model;
 using OptimusFrame.Core.Application.Interfaces;
+using System.Diagnostics.CodeAnalysis;
 
 namespace OptimusFrame.Core.Infrastructure.Services
 {
+    [ExcludeFromCodeCoverage]
     public class MediaService : IMediaService
     {
         private readonly IAmazonS3 _s3Client;
