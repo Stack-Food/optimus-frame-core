@@ -1,0 +1,41 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: optimus-frame-core-ingress
+  annotations:
+    # Habilita uso de regex nos paths
+    nginx.ingress.kubernetes.io/use-regex: "true"
+    # Remove o prefixo /core antes de encaminhar ao pod
+    # Ex: /core/api/media -> /api/media  |  /core/health -> /health
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+    # Tamanho máximo do body para uploads de vídeo em base64
+    nginx.ingress.kubernetes.io/proxy-body-size: "500m"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "300"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "300"
+    nginx.ingress.kubernetes.io/proxy-connect-timeout: "60"
+    nginx.ingress.kubernetes.io/proxy-buffering: "on"
+    nginx.ingress.kubernetes.io/proxy-buffer-size: "128k"
+    # TLS com cert-manager — descomente quando o domínio estiver apontado para o LB
+    # cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    # nginx.ingress.kubernetes.io/ssl-redirect: "true"
+spec:
+  ingressClassName: nginx-public
+  # tls:
+  #   - hosts:
+  #       - api.optimusframe.com.br
+  #     secretName: optimus-frame-core-tls
+  rules:
+    - host: api.optimusframe.com.br
+      http:
+        paths:
+          # Captura /core + tudo depois e reescreve removendo /core
+          # https://api.optimusframe.com.br/core/api/media  -> /api/media
+          # https://api.optimusframe.com.br/core/health     -> /health
+          # https://api.optimusframe.com.br/core/swagger    -> /swagger
+          - path: /core(/|$)(.*)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: optimus-frame-core
+                port:
+                  number: 8080

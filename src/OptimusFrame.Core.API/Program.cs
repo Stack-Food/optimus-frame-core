@@ -1,6 +1,9 @@
-﻿using Amazon.S3;
+﻿using Amazon.Runtime;
+using Amazon.S3;
 using Amazon.SimpleEmail;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.EntityFrameworkCore;
+using OptimusFrame.Core.API.HealthChecks;
 using OptimusFrame.Core.Application.Interfaces;
 using OptimusFrame.Core.Application.UseCases.DownloadVideo;
 using OptimusFrame.Core.Application.UseCases.GetUserVideos;
@@ -10,8 +13,6 @@ using OptimusFrame.Core.Infrastructure.Messaging;
 using OptimusFrame.Core.Infrastructure.Messaging.Consumers;
 using OptimusFrame.Core.Infrastructure.Repositories;
 using OptimusFrame.Core.Infrastructure.Services;
-using OptimusFrame.Core.API.HealthChecks;
-using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using System.Diagnostics.CodeAnalysis;
 
 namespace OptimusFrame.Core.API
@@ -23,7 +24,19 @@ public class Program
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            builder.Services.AddDefaultAWSOptions(builder.Configuration.GetAWSOptions());
+            var awsOptions = builder.Configuration.GetAWSOptions();
+
+            var accessKey = builder.Configuration["AWSAccessKey"];
+            var secretKey = builder.Configuration["AWSSecretKey"];
+            var sessionToken = builder.Configuration["AWSSessionToken"];
+
+            awsOptions.Credentials = new SessionAWSCredentials(
+                accessKey,
+                secretKey,
+                sessionToken
+            );
+
+            builder.Services.AddDefaultAWSOptions(awsOptions);
             builder.Services.AddAWSService<IAmazonS3>();
             builder.Services.AddAWSService<IAmazonSimpleEmailService>();
 
@@ -56,7 +69,19 @@ public class Program
             var rabbitMqSettings = builder.Configuration.GetSection("RabbitMQ").Get<RabbitMqSettings>()
                 ?? new RabbitMqSettings();
 
-            var rabbitMqConnectionString = $"amqp://{rabbitMqSettings.UserName}:{rabbitMqSettings.Password}@{rabbitMqSettings.HostName}:{rabbitMqSettings.Port}{rabbitMqSettings.VirtualHost}";
+            var rabbitHost = rabbitMqSettings.HostName?.Trim();
+            if (string.IsNullOrEmpty(rabbitHost))
+                throw new InvalidOperationException(
+                    "RabbitMQ HostName não está configurado. Verifique a variável de ambiente RabbitMQ__HostName.");
+
+            var rabbitFactory = new RabbitMQ.Client.ConnectionFactory
+            {
+                HostName = rabbitHost,
+                Port = rabbitMqSettings.Port,
+                UserName = rabbitMqSettings.UserName?.Trim() ?? "guest",
+                Password = rabbitMqSettings.Password ?? "",
+                VirtualHost = string.IsNullOrEmpty(rabbitMqSettings.VirtualHost) ? "/" : rabbitMqSettings.VirtualHost
+            };
 
             builder.Services.AddHealthChecks()
                 .AddNpgSql(
@@ -64,7 +89,7 @@ public class Program
                     name: "postgresql",
                     tags: new[] { "db", "sql", "postgresql" })
                 .AddRabbitMQ(
-                    rabbitMqConnectionString,
+                    sp => rabbitFactory.CreateConnectionAsync(),
                     name: "rabbitmq",
                     tags: new[] { "messaging", "rabbitmq" });
 
@@ -85,13 +110,12 @@ public class Program
                 }
             }
 
-            if (app.Environment.IsDevelopment())
+            var enableSwagger = builder.Configuration.GetValue<bool>("Features:EnableSwagger");
+            if (enableSwagger || app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
-
-            app.UseHttpsRedirection();
 
             app.MapControllers();
 

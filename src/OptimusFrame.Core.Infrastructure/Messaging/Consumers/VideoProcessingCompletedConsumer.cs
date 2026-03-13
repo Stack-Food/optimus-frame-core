@@ -20,7 +20,7 @@ namespace OptimusFrame.Core.Infrastructure.Messaging.Consumers
         private IConnection? _connection;
         private IChannel? _channel;
 
-        private const string QueueName = "video.processing.completed";
+        private const string QueueName = "video-processing-completed-queue";
 
         private readonly IServiceScopeFactory _scopeFactory;
 

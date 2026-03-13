@@ -1,0 +1,24 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+# Aplica o namespace "production" em todos os recursos do base + prod
+namespace: production
+
+bases:
+  - ../base
+
+resources:
+  - namespace.yaml
+  - serviceaccount.yaml
+  - configmap.yaml
+  - secret.yaml
+  - ghcr-secret.yaml
+
+# Sobrescreve a tag da imagem sem editar o deployment.yaml do base
+images:
+  - name: ghcr.io/stack-food/dev-optimus-frame-core
+    newTag: "ff9e107"
+
+replicas:
+  - name: optimus-frame-core
+    count: 2
