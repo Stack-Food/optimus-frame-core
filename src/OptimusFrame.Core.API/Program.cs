@@ -61,10 +61,14 @@ public class Program
                 throw new InvalidOperationException(
                     "RabbitMQ HostName não está configurado. Verifique a variável de ambiente RabbitMQ__HostName.");
 
-            var rabbitUser = Uri.EscapeDataString(rabbitMqSettings.UserName?.Trim() ?? "guest");
-            var rabbitPass = Uri.EscapeDataString(rabbitMqSettings.Password ?? "");
-            var virtualHost = string.IsNullOrEmpty(rabbitMqSettings.VirtualHost) ? "/" : rabbitMqSettings.VirtualHost;
-            var rabbitMqConnectionString = $"amqp://{rabbitUser}:{rabbitPass}@{rabbitHost}:{rabbitMqSettings.Port}{virtualHost}";
+            var rabbitFactory = new RabbitMQ.Client.ConnectionFactory
+            {
+                HostName = rabbitHost,
+                Port = rabbitMqSettings.Port,
+                UserName = rabbitMqSettings.UserName?.Trim() ?? "guest",
+                Password = rabbitMqSettings.Password ?? "",
+                VirtualHost = string.IsNullOrEmpty(rabbitMqSettings.VirtualHost) ? "/" : rabbitMqSettings.VirtualHost
+            };
 
             builder.Services.AddHealthChecks()
                 .AddNpgSql(
@@ -72,7 +76,7 @@ public class Program
                     name: "postgresql",
                     tags: new[] { "db", "sql", "postgresql" })
                 .AddRabbitMQ(
-                    rabbitMqConnectionString,
+                    sp => rabbitFactory,
                     name: "rabbitmq",
                     tags: new[] { "messaging", "rabbitmq" });
 
