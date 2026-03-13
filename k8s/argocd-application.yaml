@@ -1,0 +1,26 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: optimus-frame-core
+  namespace: argocd
+  labels:
+    app.kubernetes.io/name: optimus-frame-core
+    app.kubernetes.io/part-of: optimus-frame
+spec:
+  project: default
+
+  source:
+    repoURL: https://github.com/Stack-Food/optimus-frame-core.git
+    targetRevision: feat/add-k8s-manifests
+    path: k8s/prod
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: production
+
+  syncPolicy:
+    automated:
+      prune: true       # remove recursos que foram apagados do repo
+      selfHeal: true    # corrige drift manual no cluster
+    syncOptions:
+      - CreateNamespace=true   # cria o namespace se não existir
