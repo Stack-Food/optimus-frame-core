@@ -56,7 +56,9 @@ public class Program
             var rabbitMqSettings = builder.Configuration.GetSection("RabbitMQ").Get<RabbitMqSettings>()
                 ?? new RabbitMqSettings();
 
-            var rabbitMqConnectionString = $"amqp://{rabbitMqSettings.UserName}:{rabbitMqSettings.Password}@{rabbitMqSettings.HostName}:{rabbitMqSettings.Port}{rabbitMqSettings.VirtualHost}";
+            var rabbitUser = Uri.EscapeDataString(rabbitMqSettings.UserName ?? "guest");
+            var rabbitPass = Uri.EscapeDataString(rabbitMqSettings.Password ?? "");
+            var rabbitMqConnectionString = $"amqp://{rabbitUser}:{rabbitPass}@{rabbitMqSettings.HostName}:{rabbitMqSettings.Port}{rabbitMqSettings.VirtualHost}";
 
             builder.Services.AddHealthChecks()
                 .AddNpgSql(

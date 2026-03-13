@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: optimus-frame-core-config
+  labels:
+    app.kubernetes.io/name: optimus-frame-core
+    app.kubernetes.io/part-of: optimus-frame
+data:
+  ASPNETCORE_ENVIRONMENT: "Production"
+  ASPNETCORE_URLS: "http://+:8080"
+
+  # AWS — acesso ao S3 via IRSA (sem credenciais estáticas no ConfigMap)
+  AWS__Region: "us-east-1"
+  AWS__S3__BucketName: "optimus-frame-core-bucket"
+
+  # RabbitMQ instalado dentro do cluster EKS
+  # O hostname é descoberto e patchado em runtime pelo deploy-eks.ps1
+  RabbitMQ__HostName: "rabbitmq.messaging.svc.cluster.local"
+  RabbitMQ__Port: "5672"
+  RabbitMQ__VirtualHost: "/"
+  RabbitMQ__Queues__VideoProcessing: "video.processing.input"
+  RabbitMQ__Queues__VideoCompleted: "video.processing.completed"
