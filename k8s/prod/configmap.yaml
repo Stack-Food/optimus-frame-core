@@ -20,3 +20,6 @@ data:
   RabbitMQ__VirtualHost: "/"
   RabbitMQ__Queues__VideoProcessing: "video.processing.input"
   RabbitMQ__Queues__VideoCompleted: "video.processing.completed"
+
+  # Swagger — altere para "false" para desabilitar em produção
+  Features__EnableSwagger: "true"

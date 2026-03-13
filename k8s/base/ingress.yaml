@@ -22,16 +22,16 @@ spec:
   ingressClassName: nginx-public
   # tls:
   #   - hosts:
-  #       - api.optiumusframe.com.br
+  #       - api.optimusframe.com.br
   #     secretName: optimus-frame-core-tls
   rules:
-    - host: api.optiumusframe.com.br
+    - host: api.optimusframe.com.br
       http:
         paths:
           # Captura /core + tudo depois e reescreve removendo /core
-          # https://api.optiumusframe.com.br/core/api/media  -> /api/media
-          # https://api.optiumusframe.com.br/core/health     -> /health
-          # https://api.optiumusframe.com.br/core/swagger    -> /swagger
+          # https://api.optimusframe.com.br/core/api/media  -> /api/media
+          # https://api.optimusframe.com.br/core/health     -> /health
+          # https://api.optimusframe.com.br/core/swagger    -> /swagger
           - path: /core(/|$)(.*)
             pathType: ImplementationSpecific
             backend:

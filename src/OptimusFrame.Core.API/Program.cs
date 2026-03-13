@@ -97,13 +97,12 @@ public class Program
                 }
             }
 
-            if (app.Environment.IsDevelopment())
+            var enableSwagger = builder.Configuration.GetValue<bool>("Features:EnableSwagger");
+            if (enableSwagger || app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
-
-            app.UseHttpsRedirection();
 
             app.MapControllers();
 

@@ -17,7 +17,7 @@ resources:
 # Sobrescreve a tag da imagem sem editar o deployment.yaml do base
 images:
   - name: ghcr.io/stack-food/dev-optimus-frame-core
-    newTag: "9d67e24"
+    newTag: "ff9e107"
 
 replicas:
   - name: optimus-frame-core
