@@ -76,7 +76,7 @@ public class Program
                     name: "postgresql",
                     tags: new[] { "db", "sql", "postgresql" })
                 .AddRabbitMQ(
-                    sp => rabbitFactory,
+                    sp => rabbitFactory.CreateConnectionAsync(),
                     name: "rabbitmq",
                     tags: new[] { "messaging", "rabbitmq" });
 
