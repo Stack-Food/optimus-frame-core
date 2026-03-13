@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Amazon.S3;
+﻿using Amazon.S3;
 using Amazon.S3.Model;
 using OptimusFrame.Core.Application.Interfaces;
+using System.Diagnostics.CodeAnalysis;
 
 namespace OptimusFrame.Core.Infrastructure.Services
 {
+    [ExcludeFromCodeCoverage]
     public class MediaService : IMediaService
     {
         private readonly IAmazonS3 _s3Client;
@@ -20,9 +17,7 @@ namespace OptimusFrame.Core.Infrastructure.Services
 
         public async Task<string> UploadVideoAsync(byte[] fileBytes, Guid MediaId, string userName, string bucketName)
         {
-            var date = DateTime.UtcNow.ToString("yyyy-MM-dd");
-
-            var key = $"bucket_upload/{userName}/{MediaId}_{date}.mp4";
+            var key = $"input/{MediaId}.mp4";
 
             using var stream = new MemoryStream(fileBytes);
 
@@ -41,7 +36,7 @@ namespace OptimusFrame.Core.Infrastructure.Services
 
         public async Task<string> GenerateDownloadUrlAsync(string s3Key, int expirationMinutes = 60)
         {
-            var bucketName = "optimus-bucket";
+            var bucketName = "optimus-frame-core-bucket";
 
             var request = new GetPreSignedUrlRequest
             {

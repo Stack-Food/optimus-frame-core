@@ -1,6 +1,9 @@
-﻿using Amazon.S3;
+﻿using Amazon.Runtime;
+using Amazon.S3;
 using Amazon.SimpleEmail;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.EntityFrameworkCore;
+using OptimusFrame.Core.API.HealthChecks;
 using OptimusFrame.Core.Application.Interfaces;
 using OptimusFrame.Core.Application.UseCases.DownloadVideo;
 using OptimusFrame.Core.Application.UseCases.GetUserVideos;
@@ -10,8 +13,6 @@ using OptimusFrame.Core.Infrastructure.Messaging;
 using OptimusFrame.Core.Infrastructure.Messaging.Consumers;
 using OptimusFrame.Core.Infrastructure.Repositories;
 using OptimusFrame.Core.Infrastructure.Services;
-using OptimusFrame.Core.API.HealthChecks;
-using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using System.Diagnostics.CodeAnalysis;
 
 namespace OptimusFrame.Core.API
@@ -23,7 +24,19 @@ public class Program
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            builder.Services.AddDefaultAWSOptions(builder.Configuration.GetAWSOptions());
+            var awsOptions = builder.Configuration.GetAWSOptions();
+
+            var accessKey = builder.Configuration["AWSAccessKey"];
+            var secretKey = builder.Configuration["AWSSecretKey"];
+            var sessionToken = builder.Configuration["AWSSessionToken"];
+
+            awsOptions.Credentials = new SessionAWSCredentials(
+                accessKey,
+                secretKey,
+                sessionToken
+            );
+
+            builder.Services.AddDefaultAWSOptions(awsOptions);
             builder.Services.AddAWSService<IAmazonS3>();
             builder.Services.AddAWSService<IAmazonSimpleEmailService>();
 

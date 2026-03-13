@@ -110,7 +110,7 @@ public class UploadMediaUseCaseTests
                 It.IsAny<Guid>(),
                 It.IsAny<string>(),
                 It.IsAny<string>()))
-            .ReturnsAsync("s3://test-bucket/video.mp4");
+            .ReturnsAsync("video.mp4");
 
         // Act
         await _useCase.UploadVideoToS3(videoBytes, request);
@@ -121,7 +121,7 @@ public class UploadMediaUseCaseTests
                 videoBytes,
                 mediaId,
                 request.UserName,
-                "test-bucket"),
+                "optimus-frame-core-bucket"),
             Times.Once);
     }
 
@@ -167,47 +167,6 @@ public class UploadMediaUseCaseTests
                 m.VideoId == mediaId.ToString() &&
                 m.FileName == request.FileName &&
                 !string.IsNullOrEmpty(m.CorrelationId))),
-            Times.Once);
-    }
-
-    [Fact]
-    public async Task UploadVideoToS3_ShouldReadBucketNameFromConfiguration()
-    {
-        // Arrange
-        var videoBytes = new byte[] { 1, 2, 3, 4, 5 };
-        var request = new UploadVideoBase64Request
-        {
-            UserName = "test@example.com",
-            FileName = "test.mp4"
-        };
-
-        var createdMedia = new Media
-        {
-            MediaId = Guid.NewGuid(),
-            UserName = request.UserName,
-            Status = MediaStatus.Uploaded,
-            CreatedAt = DateTime.UtcNow,
-            FileName = request.FileName
-        };
-
-        _mockMediaRepository
-            .Setup(r => r.CreateAsync(It.IsAny<Media>()))
-            .ReturnsAsync(createdMedia);
-
-        _mockMediaService
-            .Setup(s => s.UploadVideoAsync(
-                It.IsAny<byte[]>(),
-                It.IsAny<Guid>(),
-                It.IsAny<string>(),
-                It.IsAny<string>()))
-            .ReturnsAsync("s3://test-bucket/video.mp4");
-
-        // Act
-        await _useCase.UploadVideoToS3(videoBytes, request);
-
-        // Assert
-        _mockConfiguration.Verify(
-            c => c["AWS:S3:BucketName"],
             Times.Once);
     }
 

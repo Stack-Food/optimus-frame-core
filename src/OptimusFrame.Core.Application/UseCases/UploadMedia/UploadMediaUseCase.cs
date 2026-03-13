@@ -32,14 +32,16 @@ namespace OptimusFrame.Core.Application.UseCases.UploadMedia
             var uploadFile = new Media
             {
                 Base64 = videoBytes.ToString(),
-                CreatedAt = DateTime.Now,
+                CreatedAt = DateTime.UtcNow,
                 UserName = request.UserName,
                 Status = MediaStatus.Uploaded,
+                FileName = request.FileName,
+                UrlBucket = string.Empty
             };
 
             var response = _mediaRepository.CreateAsync(uploadFile);
             var idMedia = response.Result.MediaId;
-            var bucketName = _configuration["AWS:S3:BucketName"];
+            var bucketName = "optimus-frame-core-bucket";
 
             var s3Key = await _mediaService.UploadVideoAsync(
                 videoBytes,
